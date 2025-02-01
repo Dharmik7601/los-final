@@ -15,7 +15,7 @@ const LoanInfo = () => {
 
     const handleSubmit = () => {
         console.log("downloaded");
-        Navigate('/user-panel/sanction-letter');
+        window.open(`/user-panel/sanction-letter/${loanId}`);
     }
 
     const getLoanInquiryDetails = async () => {
@@ -42,7 +42,7 @@ const LoanInfo = () => {
                 <Container fluid>
                     <Row>
                         <Col>
-                            <div className="p-4 title"><MDBBadge pill color='secondary' light>Loan Information</MDBBadge></div>
+                            <div className="p-4 title"><MDBBadge pill color='secondary' light>Loan ID: {loanId}</MDBBadge></div>
                             <Form className="container mt-3 mb-3 loan" autoComplete='off'>
                                 <Row className="mb-3">
                                     {/* LOAN AMOUNT */}
@@ -75,15 +75,19 @@ const LoanInfo = () => {
 
                                 <Row className="mb-3">
                                     {/* FIRM/BUSINESS ADDRESS*/}
-                                    <Form.Group className=" col col-sm-12" controlId="formGridAddress1">
+                                    <Form.Group className=" col col-sm-6" controlId="formGridAddress1">
                                         <Form.Label><MDBBadge pill color='secondary' light>FIRM ADDRESS / BUSINESS ADDRESS</MDBBadge></Form.Label>
                                         <Form.Control className="form-control" type="text" name="firmAddress" value={loanDetails.firmAddress} readOnly />
+                                    </Form.Group>
+                                    <Form.Group className=" col col-sm-6" controlId="formGridAddress1">
+                                        <Form.Label><MDBBadge pill color='secondary' light>LOAN STATUS</MDBBadge></Form.Label>
+                                        <Form.Control className="form-control" type="text" name="applicationStatus" value={loanDetails.applicationStatus} readOnly />
                                     </Form.Group>
                                 </Row>
 
                                 {/* SUBMIT BUTTON */}
                                 <div className="text-center p-3 mb-3" >
-                                    <Button variant="primary" size="lg" onClick={handleSubmit}>
+                                    <Button variant="primary" size="lg" onClick={handleSubmit} style={{display:loanDetails.applicationStatus === 'Accepted'?'block':'none' }}>
                                         View Sanction Letter
                                     </Button>
                                 </div>

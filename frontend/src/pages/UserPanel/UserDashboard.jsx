@@ -97,7 +97,7 @@ export default function UserDashboard() {
                 // },
                 {
                     name: <MDBBadge pill color='dark' light>Loan Status</MDBBadge>,
-                    selector: (row) => row.applicationStatus !== 'Pending' ? <MDBBadge pill color='success' light>Accepted</MDBBadge> : <MDBBadge pill color='danger' light>Pending</MDBBadge>,
+                    selector: (row) => row.applicationStatus === 'Pending' || row.applicationStatus === 'Waitlist' ? <MDBBadge pill color='danger' light>{row.applicationStatus}</MDBBadge> : <MDBBadge pill color='success' light>{row.applicationStatus}</MDBBadge>,
                     sortable: true,
                 },
             ]);

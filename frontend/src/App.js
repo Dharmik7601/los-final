@@ -82,7 +82,7 @@ function App() {
         <Route path="/user-panel/my-info/personal-info" element={<PersonalInfo />} />
         <Route path="/user-panel/my-info/loan-info/:loanId" element={<LoanInfo />} />
         <Route path="/user-panel/bank-details" element={<BankDetails />} />
-        <Route path="/user-panel/sanction-letter" element={<SanctionLetterUser />} />
+        <Route path="/user-panel/sanction-letter/:loanId" element={<SanctionLetterUser />} />
         {/* <Route path="/user-panel/bank-details-final" element={<DisplayBankDetails />} /> */}
 
         {/* ADMIN PANEL */}

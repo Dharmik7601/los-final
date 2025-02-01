@@ -9,8 +9,9 @@ const jwt = require('jsonwebtoken')
 const sendEmail = require('./emailController');
 const crypto = require('crypto')
 const { generateOtp } = require('../Middleware/AdditionalFunc')
-const UserDocuments = require('../Model/userDocumentsModel')
-
+const UserDocuments = require('../Model/userDocumentsModel');
+const { log } = require('console');
+const Loan = require('../Model/loanModel')
 
 const checkAuth = async (req, res) => {
     const { userId, email } = req.user;
@@ -222,7 +223,7 @@ const logout = async (req, res) => {
 
 const getUser = async (req, res) => {
     const { userId, email } = req.user;
-    const user = await User.findById({ _id: userId, email: email }, { _id: false }).select("salutation first_name middle_name last_name gender dob mobile email address pin city state country");
+    const user = await User.findById({ _id: userId, email: email }).select("salutation first_name middle_name last_name gender dob mobile email address pin city state country");
     if (!user) {
         throw new NotFoundError(`No user found with USER_ID:${userId}`)
     }
@@ -425,7 +426,33 @@ const getUserLoanDocumentLink = async (req, res) => {
     res.status(StatusCodes.OK).send(url)
 }
 
+const getUserLoanSanctionLetterDetails = async (req, res) => {
+    const { loanId: loanId } = req.params;
+    const {userId,email} = req.user
+    const user = await User.findOne({ _id: userId, email: email })
+    if (!user) {
+        throw new NotFoundError(`No user found with USER_ID: ${userId}`)
+    }
+    const loanDetails = await Loan.findOne({ _id: loanId })
+    if(!loanDetails) throw new NotFoundError(`No loan found with loan_id: ${loanId}`)
+    const userLoanDetails = {
+        loanId: loanDetails._id,
+        loanAmount: loanDetails.loanAmount,
+        applicantsName: user.salutation + ' ' + user.first_name + ' ' + user.middle_name + ' ' + user.last_name,
+        mobile: user.mobile,
+        loanType: loanDetails.loanType,
+        email: user.email,
+        sanctionDate: loanDetails.sanctionDate.toDateString(),
+        sanctionLetterValidity: loanDetails.sanctionLetterValidity.toDateString(),
+        rateOfInterest: loanDetails.rateOfInterest,
+        loanTenor: loanDetails.loanTenor,
+        totalProcessingCharges: loanDetails.totalProcessingCharges,
+        originationFee: loanDetails.originationFee,
+        emi: loanDetails.emi
+    }
+    res.status(StatusCodes.OK).json(userLoanDetails)
+}
 
 
-module.exports = { createUser, getAllUser, login, getUser, updateUser, deleteUser, getAdmin, blockUser, unblockUser, handleRefreshToken, logout, passwordReset, forgetPasswordToken, resetPassword, updateUserLoanDetails, checkOtp, setUserPassword, checkLoginOtp, getUser1, checkisBankAccountLinked, checkIfAvailable, getBankDetails, checkAuth, getLoanInquiryDetails, getUserDocumentDetails, getUserLoanDocumentLink };
+module.exports = { createUser, getAllUser, login, getUser, updateUser, deleteUser, getAdmin, blockUser, unblockUser, handleRefreshToken, logout, passwordReset, forgetPasswordToken, resetPassword, updateUserLoanDetails, checkOtp, setUserPassword, checkLoginOtp, getUser1, checkisBankAccountLinked, checkIfAvailable, getBankDetails, checkAuth, getLoanInquiryDetails, getUserDocumentDetails, getUserLoanDocumentLink,getUserLoanSanctionLetterDetails };
 

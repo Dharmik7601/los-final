@@ -1,11 +1,44 @@
 import { Container, Button } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import "./SanctionLetterUser.css";
 import logo from "../../images/ad los.png";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const SanctionLetterUser = () => {
+
+	const Navigate = useNavigate()
+
+	const { loanId } = useParams()
+
+	const [sanctionLetterDetails,setSanctionLetterDetails] = useState({})
+	
+	useEffect(() => {
+		getSanctionLetterDetails()
+	},[])
+	
+	const getSanctionLetterDetails = async () => {
+		try {
+                    await axios.get(`http://localhost:5000/api/v1/user/loan/sanction/letter/${loanId}`, {
+                        withCredentials: true
+					}).then(response => {
+						console.log(response);
+                        setSanctionLetterDetails(response.data)
+                    })
+                } catch (err) {
+                    if (err.response) {
+						alert(err.response.data.msg)
+						// Navigate('/')
+                        return
+                    } else {
+						alert('Something went wrong!!')
+					}
+			Navigate('/')
+			return
+                }
+	}
 
 	const [loader, setLoader] = useState(false);
 
@@ -19,10 +52,12 @@ const SanctionLetterUser = () => {
 			const componentHeight = doc.internal.pageSize.getHeight();
 			doc.addImage(imgData, 'PNG', 0, 0, componentWidth, componentHeight);
 			setLoader(false);
+			console.log(doc);
 			doc.save('sanction-letter-.pdf');
 		})
 	}
 
+	
 
 	return (
 		<>
@@ -40,12 +75,12 @@ const SanctionLetterUser = () => {
 							<tr width="20%">
 								<td className="main0-left">
 									<tr>
-										<td><h5>Date: DD/MM/YYYY</h5></td>
+										<td><h5>Date: {sanctionLetterDetails.sanctionDate}</h5></td>
 
 									</tr>
 									<div className="p-5"></div>
 									<tr>
-										<td><h5>To Mr. X,</h5></td>
+										<td><h5>To {sanctionLetterDetails.applicantsName},</h5></td>
 									</tr>
 								</td>
 								<td className="main0-right"><img src={logo} alt="company logo" /></td>
@@ -69,23 +104,23 @@ const SanctionLetterUser = () => {
 						<tbody>
 							<tr>
 								<td width="35%">Application No.:</td>
-								<td><b>XXXXXXXXXXXXXXX</b></td>
+								<td><b>{sanctionLetterDetails.loanId}</b></td>
 							</tr>
 							<tr>
 								<td>Sanctioned Date:</td>
-								<td><b>DD/MM/YYYY</b></td>
+								<td><b>{sanctionLetterDetails.sanctionDate}</b></td>
 							</tr>
 							<tr>
 								<td>Applicant's Name:</td>
-								<td><b>Mr. X</b></td>
+								<td><b>{sanctionLetterDetails.applicantsName}</b></td>
 							</tr>
 							<tr>
 								<td>Mobile Number:</td>
-								<td><b>XXXXXXXXXXX</b></td>
+								<td><b>{sanctionLetterDetails.mobile}</b></td>
 							</tr>
 							<tr>
 								<td>Email:</td>
-								<td><b>abc@gmail.com</b></td>
+								<td><b>{sanctionLetterDetails.email}</b></td>
 							</tr>
 						</tbody>
 					</table>
@@ -96,35 +131,35 @@ const SanctionLetterUser = () => {
 						<tbody>
 							<tr>
 								<td width="30%">Loan Type:</td>
-								<td><b>Business</b></td>
+								<td><b>{sanctionLetterDetails.loanType}</b></td>
 							</tr>
 							<tr>
 								<td>Loan Amount Sanctioned:</td>
-								<td><b>DD/MM/YYYY</b></td>
+								<td><b>{sanctionLetterDetails.loanAmount}</b></td>
 							</tr>
 							<tr>
 								<td>Floating Interest Rate:</td>
-								<td><b>X% - Rate applicable at the time of disbursement</b></td>
+								<td><b>{sanctionLetterDetails.rateOfInterest}% - Rate applicable at the time of disbursement</b></td>
 							</tr>
 							<tr>
 								<td>Loan Tenor (in years)</td>
-								<td><b>X years</b></td>
+								<td><b>{sanctionLetterDetails.loanTenor} years</b></td>
 							</tr>
 							<tr>
 								<td>Total Processing Charges:</td>
-								<td><b>Upto X% of the total loan amount</b></td>
+								<td><b>Upto {sanctionLetterDetails.totalProcessingCharges}% of the total loan amount</b></td>
 							</tr>
 							<tr>
 								<td>Origination Fee (inclusive of GST):</td>
-								<td><b>XXXX</b></td>
+								<td><b>{sanctionLetterDetails.originationFee}</b></td>
 							</tr>
 							<tr>
 								<td>Sanction Letter Validity:</td>
-								<td><b>X months for date of sanction</b></td>
+								<td><b>{sanctionLetterDetails.sanctionLetterValidity}</b></td>
 							</tr>
 							<tr>
 								<td>EMI (INR):</td>
-								<td><b>XXXXX</b></td>
+								<td><b>{sanctionLetterDetails.emi}</b></td>
 							</tr>
 						</tbody>
 					</table>

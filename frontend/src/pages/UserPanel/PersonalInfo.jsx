@@ -44,7 +44,7 @@ const PersonalInfo = () => {
                 <Container fluid>
                     <Row>
                         <Col>
-                            <div className="p-4 title"><MDBBadge pill color='secondary' light>Personal Information</MDBBadge></div>
+                            <div className="p-4 title"><MDBBadge pill color='secondary' light>User ID: {userDetail._id}</MDBBadge></div>
                             <Form className="container mt-3 mb-3 personal" autoComplete='off'>
                                 <Row className="mb-3">
                                     {/* SALUTATION */}

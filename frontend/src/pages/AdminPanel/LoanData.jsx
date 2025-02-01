@@ -337,14 +337,20 @@ const LoanData = () => {
 
 	//const buttonText = loanDetails.application_status === 'Accepted' ? 'View Sanction Letter' : 'Take Decision';
 
+	const handleSanctionLetter = async () => {
+		window.open(`/admin-panel/sanction-letter/${userId}/${email}/${loanId}`)
+		return
+	}
 
-	const handleClick = () => {
+	const handleClick = async () => {
 		if (loanDetails.application_status === 'Accepted') {
-		  handleSanctionLetter();
+			await handleSanctionLetter();
+			return
 		} else {
-		  handleShow();
+			await handleShow();
+			return
 		}
-	  };
+	};
 
 	return (
 		<>

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createUser, getAllUser, login, getUser, deleteUser, updateUser, getAdmin, blockUser, unblockUser, handleRefreshToken, logout, passwordReset, forgetPasswordToken, resetPassword, updateUserLoanDetails, checkOtp, setUserPassword, checkLoginOtp,getUser1, checkisBankAccountLinked, checkIfAvailable, getBankDetails, checkAuth, getLoanInquiryDetails, getUserDocumentDetails, getUserLoanDocumentLink } = require('../Controller/userController');
+const { createUser, getAllUser, login, getUser, deleteUser, updateUser, getAdmin, blockUser, unblockUser, handleRefreshToken, logout, passwordReset, forgetPasswordToken, resetPassword, updateUserLoanDetails, checkOtp, setUserPassword, checkLoginOtp,getUser1, checkisBankAccountLinked, checkIfAvailable, getBankDetails, checkAuth, getLoanInquiryDetails, getUserDocumentDetails, getUserLoanDocumentLink, getUserLoanSanctionLetterDetails } = require('../Controller/userController');
 const { authMiddleware, isAdmin } = require('../Middleware/AuthMiddleware')
 
 router.get('/check-auth',authMiddleware,checkAuth)
@@ -29,7 +29,8 @@ router.post('/cia', checkIfAvailable)
 router.get('/get-bank-details', authMiddleware, getBankDetails)
 router.get('/loan/inquiry/:loanId', authMiddleware, getLoanInquiryDetails)
 router.get('/documents/getAll', authMiddleware, getUserDocumentDetails)
-router.get('/document/link/:doc',authMiddleware,getUserLoanDocumentLink)
+router.get('/document/link/:doc', authMiddleware, getUserLoanDocumentLink)
+router.get('/loan/sanction/letter/:loanId',authMiddleware,getUserLoanSanctionLetterDetails)
 
 
 
